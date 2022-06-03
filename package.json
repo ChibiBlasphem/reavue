@@ -1,0 +1,45 @@
+{
+  "name": "reavue",
+  "version": "0.0.1",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "main": "./dist/revue.cjs.js",
+  "module": "./dist/revue.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/revue.es.js",
+      "require": "./dist/revue.cjs.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit && vite build && tsc --emitDeclarationOnly",
+    "test": "jest"
+  },
+  "peerDependencies": {
+    "@vue/composition-api": "^1.6.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "vue": "^2.6.14"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.2.0",
+    "@testing-library/vue": "^5.8.3",
+    "@types/jest": "^27.5.1",
+    "@vue/composition-api": "^1.6.2",
+    "esbuild": "^0.14.42",
+    "esbuild-jest": "^0.5.0",
+    "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.0",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.7.2",
+    "vite": "^2.9.9",
+    "vue": "2.6.14",
+    "vue-template-compiler": "^2.6.14"
+  }
+}
