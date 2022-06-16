@@ -8,6 +8,9 @@ import { ExtractPropTypes } from '@vue/composition-api';
 
 const VUE_COMPONENT_NAME = 'revue-internal-component-name';
 
+Vue.config.devtools = false;
+Vue.config.productionTip = false;
+
 export type VueWrapperProps<P extends Record<string, any>> = {
   component: Component<any, any, any, P>;
   on?: Record<string, any>;

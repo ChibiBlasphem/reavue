@@ -88,7 +88,7 @@ describe('Vue Wrapper', () => {
         component: ReactButtonComponent,
       },
       listeners: {
-        onClick: mockOnClick,
+        click: mockOnClick,
       },
     });
 
