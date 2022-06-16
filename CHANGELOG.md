@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/ChibiBlasphem/reavue/compare/v1.0.1...v1.1.0) (2022-06-16)
+
+
+### Features
+
+* link `[@click](https://github.com/click)` to `onClick` ([#4](https://github.com/ChibiBlasphem/reavue/issues/4)) ([26ba70b](https://github.com/ChibiBlasphem/reavue/commit/26ba70b6d84a580151b05b92d2ab50f1dfed2fc8))
+
 ## [1.0.1](https://github.com/ChibiBlasphem/reavue/compare/v1.0.0...v1.0.1) (2022-06-13)
 
 
