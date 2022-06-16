@@ -26,6 +26,8 @@ const makeReactComponent = (Component: ComponentType<{ children?: ReactNode }>) 
   return ReactComponent;
 };
 
+const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
+
 export const ReactWrapper = defineComponent({
   props: ['component', 'passedProps'],
   render(createElement) {
@@ -46,9 +48,15 @@ export const ReactWrapper = defineComponent({
       const Component = makeReactComponent(component);
       const children = this.$slots.default !== undefined ? { children: this.$slots.default } : {};
 
-      reactRoot.render(
-        <Component {...passedProps} {...children} {...this.$attrs} {...this.$listeners} />
+      // Bind `@click` to `onClick`, `@submit` to `onSubmit`, ...
+      const onEvents = Object.fromEntries(
+        Object.entries(this.$listeners).map(([eventName, callback]) => [
+          `on${capitalize(eventName)}`,
+          callback,
+        ])
       );
+
+      reactRoot.render(<Component {...passedProps} {...children} {...this.$attrs} {...onEvents} />);
     },
   },
   updated() {
