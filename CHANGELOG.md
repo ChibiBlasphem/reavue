@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/ChibiBlasphem/reavue/compare/v1.1.0...v1.2.0) (2022-06-27)
+
+
+### Features
+
+* add possibility to pass root variable to vue wrapper ([#5](https://github.com/ChibiBlasphem/reavue/issues/5)) ([33bf3e1](https://github.com/ChibiBlasphem/reavue/commit/33bf3e1c95135dd88118edc81d70c658c77214cc))
+
 # [1.1.0](https://github.com/ChibiBlasphem/reavue/compare/v1.0.1...v1.1.0) (2022-06-16)
 
 
