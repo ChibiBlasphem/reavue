@@ -15,6 +15,7 @@ export type VueWrapperProps<P extends Record<string, any>> = {
   component: Component<any, any, any, P>;
   on?: Record<string, any>;
   children?: ReactNode;
+  $rootVariables?: Record<string, any>;
 } & ExtractPropTypes<P>;
 
 const wrapReactChildren = (createElement: CreateElement, childrenRef: any) => {
@@ -29,6 +30,7 @@ export const VueWrapper = function VueWrapper<P>({
   component,
   on,
   children,
+  $rootVariables = {},
   ...props
 }: VueWrapperProps<P>) {
   const rootEl = useRef<HTMLDivElement>(null);
@@ -68,6 +70,7 @@ export const VueWrapper = function VueWrapper<P>({
           [VUE_COMPONENT_NAME]: component,
           'revue-internal-react-wrapper': ReactWrapper,
         },
+        ...$rootVariables,
       }));
 
       return () => {
