@@ -8,6 +8,11 @@ type VueInReactProps<P> = {
   children?: ReactNode;
 } & ExtractPropTypes<P>;
 
-export function VueInReact<P extends Record<string, any>>(component: Component<any, any, any, P>) {
-  return (props: VueInReactProps<P>) => <VueWrapper component={component} {...props} />;
+export function VueInReact<P extends Record<string, any>>(
+  component: Component<any, any, any, P>,
+  rootVariables: Record<string, any> = {}
+) {
+  return (props: VueInReactProps<P>) => (
+    <VueWrapper $rootVariables={rootVariables} component={component} {...props} />
+  );
 }
