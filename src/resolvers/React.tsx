@@ -1,6 +1,7 @@
 import type { ExtractPropTypes } from '@vue/composition-api';
 import React, { type ReactNode } from 'react';
 import type { Component } from 'vue';
+import type { VueWrapperOptions } from '../wrappers/Vue';
 import { VueWrapper } from '../wrappers/Vue';
 
 type VueInReactProps<P> = {
@@ -10,9 +11,15 @@ type VueInReactProps<P> = {
 
 export function VueInReact<P extends Record<string, any>>(
   component: Component<any, any, any, P>,
-  rootVariables: Record<string, any> = {}
+  rootVariables: Record<string, any> = {},
+  options: VueWrapperOptions = {}
 ) {
   return (props: VueInReactProps<P>) => (
-    <VueWrapper $rootVariables={rootVariables} component={component} {...props} />
+    <VueWrapper
+      $rootVariables={rootVariables}
+      $options={options}
+      component={component}
+      {...props}
+    />
   );
 }

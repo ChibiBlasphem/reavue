@@ -1,7 +1,7 @@
-import React, { createElement, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import Vue from 'vue';
-import type { Component, CreateElement } from 'vue';
+import type { Component, CreateElement, ComponentOptions } from 'vue';
 import { vueElement } from '../directives/vue-element';
 import { ReactWrapper } from './React';
 import { ExtractPropTypes } from '@vue/composition-api';
@@ -11,11 +11,29 @@ const VUE_COMPONENT_NAME = 'revue-internal-component-name';
 Vue.config.devtools = false;
 Vue.config.productionTip = false;
 
+export type VueWrapperOptions = {
+  lifecycles?: Pick<
+    ComponentOptions<Vue>,
+    | 'beforeCreate'
+    | 'created'
+    | 'beforeDestroy'
+    | 'destroyed'
+    | 'beforeMount'
+    | 'mounted'
+    | 'beforeUpdate'
+    | 'updated'
+    | 'activated'
+    | 'deactivated'
+    | 'errorCaptured'
+  >;
+};
+
 export type VueWrapperProps<P extends Record<string, any>> = {
   component: Component<any, any, any, P>;
   on?: Record<string, any>;
   children?: ReactNode;
   $rootVariables?: Record<string, any>;
+  $options?: VueWrapperOptions;
 } & ExtractPropTypes<P>;
 
 const wrapReactChildren = (createElement: CreateElement, childrenRef: any) => {
@@ -31,6 +49,7 @@ export const VueWrapper = function VueWrapper<P>({
   on,
   children,
   $rootVariables = {},
+  $options = {},
   ...props
 }: VueWrapperProps<P>) {
   const rootEl = useRef<HTMLDivElement>(null);
@@ -71,6 +90,7 @@ export const VueWrapper = function VueWrapper<P>({
           'revue-internal-react-wrapper': ReactWrapper,
         },
         ...$rootVariables,
+        ...($options.lifecycles ?? {}),
       }));
 
       return () => {
