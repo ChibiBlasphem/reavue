@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/ChibiBlasphem/reavue/compare/v1.2.0...v1.3.0) (2022-07-15)
+
+
+### Features
+
+* add VueWrapper lifecycles methods option ([#6](https://github.com/ChibiBlasphem/reavue/issues/6)) ([8471594](https://github.com/ChibiBlasphem/reavue/commit/847159442a3fd7ad0d0cb634003d1ad01a087d23))
+
 # [1.2.0](https://github.com/ChibiBlasphem/reavue/compare/v1.1.0...v1.2.0) (2022-06-27)
 
 
