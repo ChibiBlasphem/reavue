@@ -63,9 +63,26 @@ const ReactChildrenComponentTester = ({ component }: { component: Component }) =
   );
 };
 
+const ReactLifecycleComponentTester = ({
+  component,
+  $options,
+}: {
+  component: Component;
+  $options: any;
+}) => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <button onClick={() => setCount((c) => c + 1)}>Increment</button>
+      <VueWrapper component={component} count={count} $options={$options} />
+    </div>
+  );
+};
+
 describe('Vue Wrapper', () => {
   it('should render the ReactComponent', async () => {
-    const { findByText, unmount } = render(<VueWrapper count={0} component={VueCountComponent} />);
+    const { findByText } = render(<VueWrapper count={0} component={VueCountComponent} />);
 
     await findByText('Count is: 0');
   });
@@ -120,5 +137,32 @@ describe('Vue Wrapper', () => {
       await userEvent.click(await findByRole('button'));
     });
     await findByText('Bonsoir');
+  });
+
+  it('should be able to take lifecycle methods', async () => {
+    const beforeCreate = jest.fn();
+    const updated = jest.fn();
+    const destroyed = jest.fn();
+
+    const $options = {
+      lifecycles: {
+        beforeCreate,
+        destroyed,
+        updated,
+      },
+    };
+
+    const { findByRole, unmount } = render(
+      <ReactLifecycleComponentTester component={VueCountComponent} $options={$options} />
+    );
+    expect(beforeCreate).toHaveBeenCalled();
+
+    await act(async () => {
+      await userEvent.click(await findByRole('button'));
+    });
+    expect(updated).toHaveBeenCalled();
+
+    unmount();
+    expect(destroyed).toHaveBeenCalled();
   });
 });
