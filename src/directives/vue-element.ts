@@ -3,33 +3,43 @@ const $container = Symbol();
 const $nextSiblingPatched = Symbol();
 const $childNodesPatched = Symbol();
 
+declare global {
+  interface Node {
+    [$container]?: HTMLElement;
+    [$nextSiblingPatched]?: true;
+    [$placeholder]: Comment;
+    [$childNodesPatched]?: true;
+    content: ChildNode[];
+  }
+}
+
 const isContainer = (node: HTMLElement) => 'content' in node;
 
-const patchParentNode = (node: HTMLElement, container: HTMLElement) => {
+const patchParentNode = (node: Node, container: HTMLElement) => {
   if ($container in node) {
     return;
   }
 
-  (node as any)[$container] = container;
+  node[$container] = container;
 
   Object.defineProperty(node, 'parentNode', {
-    get() {
+    get(this: HTMLElement) {
       return this[$container] || this.parentElement;
     },
   });
 };
 
-const patchNextSibling = (node: HTMLElement) => {
+const patchNextSibling = (node: Node) => {
   if ($nextSiblingPatched in node) {
     return;
   }
 
-  (node as any)[$nextSiblingPatched] = true;
+  node[$nextSiblingPatched] = true;
 
   Object.defineProperty(node, 'nextSibling', {
-    get() {
-      const { childNodes } = this.parentNode;
-      const index = childNodes.indexOf(this);
+    get(this: HTMLElement) {
+      const { childNodes } = this.parentNode!;
+      const index = [...childNodes].indexOf(this);
       if (index > -1) {
         return childNodes[index + 1] || null;
       }
@@ -38,27 +48,27 @@ const patchNextSibling = (node: HTMLElement) => {
   });
 };
 
-const patchChildNodes = (node: HTMLElement) => {
-  if ($childNodesPatched in node) {
+const patchChildNodes = (element: HTMLElement) => {
+  if ($childNodesPatched in element) {
     return;
   }
 
-  (node as any)[$childNodesPatched] = true;
+  element[$childNodesPatched] = true;
 
-  Object.defineProperties(node, {
+  Object.defineProperties(element, {
     childNodes: {
-      get() {
+      get(this: HTMLElement) {
         return this.content || getChildNodesInContainer(this);
       },
     },
     firstChild: {
-      get() {
+      get(this: HTMLElement) {
         return this.childNodes[0] || null;
       },
     },
   });
 
-  node.hasChildNodes = function () {
+  element.hasChildNodes = function (this: HTMLElement) {
     return this.childNodes.length > 0;
   };
 };
@@ -75,36 +85,36 @@ const getChildNodesInContainer = (node: HTMLElement) => {
 };
 
 function before(this: HTMLElement, ...nodes: Node[]) {
-  (this as any).content[0].before(...nodes);
+  this.content[0].before(...nodes);
 }
 
 function remove(this: HTMLElement) {
   // If the fragment is being removed, all children, including placeholder should be removed
-  const { content } = this as any;
+  const { content } = this;
   const removed = content.splice(0, content.length);
 
-  removed.forEach((node: HTMLElement) => {
+  removed.forEach((node: ChildNode) => {
     node.remove();
   });
 }
 
-function addPlaceholder(node: HTMLElement, insertBeforeNode: HTMLElement) {
-  const placeholder = (node as any)[$placeholder];
+function addPlaceholder(node: HTMLElement, insertBeforeNode: ChildNode) {
+  const placeholder = node[$placeholder];
 
   insertBeforeNode.before(placeholder);
   patchParentNode(placeholder, node);
-  (node as any).content.unshift(placeholder);
+  node.content.unshift(placeholder);
 }
 
 function removeChild(this: HTMLElement, node: HTMLElement) {
   if (isContainer(this)) {
     // If this is a fragment element
-    const hasChildInFragment = (this as any).content.indexOf(node);
+    const hasChildInFragment = this.content.indexOf(node);
     if (hasChildInFragment > -1) {
-      const [removedNode] = (this as any).content.splice(hasChildInFragment, 1);
+      const [removedNode] = this.content.splice(hasChildInFragment, 1);
 
       // If last node, insert placeholder
-      if ((this as any).content.length === 0) {
+      if (this.content.length === 0) {
         addPlaceholder(this, removedNode);
       }
 
@@ -125,11 +135,11 @@ function removeChild(this: HTMLElement, node: HTMLElement) {
 
 function insertBefore(this: HTMLElement, insertNode: HTMLElement, insertBeforeNode: HTMLElement) {
   // Should this be leaf nodes?
-  const insertNodes = (insertNode as any).content || [insertNode];
+  const insertNodes = insertNode.content || [insertNode];
 
   // If this element is a fragment, insert nodes in virtual fragment
   if (isContainer(this)) {
-    const { content } = this as any;
+    const { content } = this;
 
     if (insertBeforeNode) {
       const index = content.indexOf(insertBeforeNode);
@@ -152,7 +162,7 @@ function insertBefore(this: HTMLElement, insertNode: HTMLElement, insertBeforeNo
     this.append(...insertNodes);
   }
 
-  insertNodes.forEach((node: HTMLElement) => {
+  insertNodes.forEach((node) => {
     patchParentNode(node, this);
   });
 
@@ -163,7 +173,7 @@ function insertBefore(this: HTMLElement, insertNode: HTMLElement, insertBeforeNo
 }
 
 function appendChild(this: HTMLElement, node: HTMLElement) {
-  const { content } = this as any;
+  const { content } = this;
   const lastChild = content[content.length - 1];
 
   lastChild.after(node);
@@ -177,9 +187,9 @@ function appendChild(this: HTMLElement, node: HTMLElement) {
 }
 
 function removePlaceholder(node: HTMLElement) {
-  const placeholder = (node as any)[$placeholder];
-  if ((node as any).content[0] === placeholder) {
-    (node as any).content.shift();
+  const placeholder = node[$placeholder];
+  if (node.content[0] === placeholder) {
+    node.content.shift();
     placeholder.remove();
   }
 }
@@ -187,23 +197,23 @@ function removePlaceholder(node: HTMLElement) {
 export const vueElement = {
   inserted(element: HTMLElement) {
     const { parentNode, nextSibling, previousSibling } = element;
-    const childNodes = Array.from(element.childNodes);
+    const childNodes = [...element.childNodes];
     const placeholder = document.createComment('');
 
     if (childNodes.length === 0) {
       childNodes.push(placeholder);
     }
 
-    (element as any).content = childNodes;
-    (element as any)[$placeholder] = placeholder;
+    element.content = childNodes;
+    element[$placeholder] = placeholder;
 
     const fragment = document.createDocumentFragment();
     fragment.append(...childNodes);
     element.replaceWith(fragment);
 
     childNodes.forEach((node) => {
-      patchParentNode(node as HTMLElement, element);
-      patchNextSibling(node as HTMLElement);
+      patchParentNode(node, element);
+      patchNextSibling(node);
     });
 
     patchChildNodes(element);
@@ -217,7 +227,7 @@ export const vueElement = {
     });
 
     Object.defineProperty(element, 'innerHTML', {
-      set(htmlString) {
+      set(this: HTMLElement, htmlString: string) {
         const domify = document.createElement('div');
         domify.innerHTML = htmlString;
 
