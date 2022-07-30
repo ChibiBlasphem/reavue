@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/ChibiBlasphem/reavue/compare/v1.3.1...v1.3.2) (2022-07-30)
+
+
+### Bug Fixes
+
+* **VueWrapper:** use ref to update listeners ([#8](https://github.com/ChibiBlasphem/reavue/issues/8)) ([17b11aa](https://github.com/ChibiBlasphem/reavue/commit/17b11aa6ee2f9ce9a7efdcfc456eeecc4a232356))
+
 ## [1.3.1](https://github.com/ChibiBlasphem/reavue/compare/v1.3.0...v1.3.1) (2022-07-30)
 
 
