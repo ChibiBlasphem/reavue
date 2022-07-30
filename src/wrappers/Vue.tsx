@@ -55,9 +55,11 @@ export const VueWrapper = function VueWrapper<P>({
   const rootEl = useRef<HTMLDivElement>(null);
   const vueInstance = useRef<Vue | null>(null);
   const childrenRef = useRef<ReactNode | undefined>();
+  const listenersRef = useRef<Record<string, any> | undefined>(on);
 
   useEffect(() => {
     childrenRef.current = children;
+    listenersRef.current = on;
 
     if (vueInstance.current) {
       Object.assign(vueInstance.current.$data, props);
@@ -79,7 +81,7 @@ export const VueWrapper = function VueWrapper<P>({
               VUE_COMPONENT_NAME,
               {
                 props: this.$data,
-                on,
+                on: listenersRef.current,
               },
               [wrapReactChildren(createElement, childrenRef)]
             ),
