@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/ChibiBlasphem/reavue/compare/v1.3.0...v1.3.1) (2022-07-30)
+
+
+### Bug Fixes
+
+* **vue-element:** fix parent patching bug ([#7](https://github.com/ChibiBlasphem/reavue/issues/7)) ([771e0ac](https://github.com/ChibiBlasphem/reavue/commit/771e0ac8ec313fc616a6a22b81fdfa33e4100c03))
+
 # [1.3.0](https://github.com/ChibiBlasphem/reavue/compare/v1.2.0...v1.3.0) (2022-07-15)
 
 
