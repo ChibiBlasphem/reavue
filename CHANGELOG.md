@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/ChibiBlasphem/reavue/compare/v1.3.2...v1.3.3) (2022-08-31)
+
+
+### Bug Fixes
+
+* lower typescript version needed by removing inline import type ([#9](https://github.com/ChibiBlasphem/reavue/issues/9)) ([c08368e](https://github.com/ChibiBlasphem/reavue/commit/c08368e205214036343c942654a4b4aceeee3243))
+
 ## [1.3.2](https://github.com/ChibiBlasphem/reavue/compare/v1.3.1...v1.3.2) (2022-07-30)
 
 
