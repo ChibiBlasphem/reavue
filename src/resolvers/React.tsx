@@ -1,5 +1,6 @@
 import type { ExtractPropTypes } from '@vue/composition-api';
-import React, { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React from 'react';
 import type { Component } from 'vue';
 import type { VueWrapperOptions } from '../wrappers/Vue';
 import { VueWrapper } from '../wrappers/Vue';

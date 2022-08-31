@@ -1,5 +1,5 @@
-import React from 'react';
 import type { ComponentType, ReactNode } from 'react';
+import React from 'react';
 import { defineComponent } from '@vue/composition-api';
 import { createRoot, Root } from 'react-dom/client';
 import { VueWrapper } from './Vue';

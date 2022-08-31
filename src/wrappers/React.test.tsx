@@ -1,5 +1,5 @@
-import React from 'react';
 import type { ReactNode } from 'react';
+import React from 'react';
 import { render } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
 import { ReactWrapper } from './React';
