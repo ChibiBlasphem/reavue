@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/ChibiBlasphem/reavue/compare/v1.3.3...v1.3.4) (2022-09-03)
+
+
+### Bug Fixes
+
+* fix reavue rerendering diff ReactInVue ([#10](https://github.com/ChibiBlasphem/reavue/issues/10)) ([0aaf686](https://github.com/ChibiBlasphem/reavue/commit/0aaf686b490607f5361ae71abec4414d1485a234))
+
 ## [1.3.3](https://github.com/ChibiBlasphem/reavue/compare/v1.3.2...v1.3.3) (2022-08-31)
 
 
