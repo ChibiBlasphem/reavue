@@ -6,16 +6,16 @@ import { VueWrapper } from './Vue';
 
 const wrapVueChildren = (children: any) => {
   return defineComponent({
-    render: (createElement) => createElement('div', children),
+    render: (createElement) => children,
   });
 };
 
 const makeReactComponent = (Component: ComponentType<{ children?: ReactNode }>) => {
   const ReactComponent = function ({ children, ...props }: any) {
-    const wrappedChildren = wrapVueChildren(children);
-
     return (
-      <Component {...props}>{children && <VueWrapper component={wrappedChildren} />}</Component>
+      <Component {...props}>
+        {children && <VueWrapper component={wrapVueChildren(children)} />}
+      </Component>
     );
   };
 
@@ -36,16 +36,17 @@ export const ReactWrapper = defineComponent({
   data() {
     return {
       reactRoot: null,
-    } as { reactRoot: any };
+      Component: null,
+    } as { reactRoot: any; Component: any };
   },
   mounted() {
     this.reactRoot = createRoot(this.$refs.react as HTMLDivElement);
+    this.Component = makeReactComponent(this.$props.component);
     this.mountReactComponent(this.reactRoot);
   },
   methods: {
     mountReactComponent(reactRoot: Root) {
-      const { component, passedProps } = this.$props;
-      const Component = makeReactComponent(component);
+      const { passedProps } = this.$props;
       const children = this.$slots.default !== undefined ? { children: this.$slots.default } : {};
 
       // Bind `@click` to `onClick`, `@submit` to `onSubmit`, ...
@@ -56,7 +57,9 @@ export const ReactWrapper = defineComponent({
         ])
       );
 
-      reactRoot.render(<Component {...passedProps} {...children} {...this.$attrs} {...onEvents} />);
+      reactRoot.render(
+        <this.Component {...passedProps} {...children} {...this.$attrs} {...onEvents} />
+      );
     },
   },
   updated() {
@@ -64,7 +67,10 @@ export const ReactWrapper = defineComponent({
   },
   watch: {
     $props: {
-      handler() {
+      handler(newProps, oldProps) {
+        if (oldProps.component !== newProps.component) {
+          this.Component = makeReactComponent(newProps.component);
+        }
         this.mountReactComponent(this.reactRoot);
       },
       deep: true,

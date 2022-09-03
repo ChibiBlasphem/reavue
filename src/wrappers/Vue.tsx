@@ -56,10 +56,12 @@ export const VueWrapper = function VueWrapper<P>({
   const vueInstance = useRef<Vue | null>(null);
   const childrenRef = useRef<ReactNode | undefined>();
   const listenersRef = useRef<Record<string, any> | undefined>(on);
+  const componentRef = useRef<any>(component);
 
   useEffect(() => {
     childrenRef.current = children;
     listenersRef.current = on;
+    componentRef.current = component;
 
     if (vueInstance.current) {
       Object.assign(vueInstance.current.$data, props);
@@ -69,6 +71,7 @@ export const VueWrapper = function VueWrapper<P>({
 
   useEffect(() => {
     const el = rootEl.current;
+    componentRef.current = component;
 
     if (el) {
       const instance = (vueInstance.current = new Vue({
@@ -78,7 +81,7 @@ export const VueWrapper = function VueWrapper<P>({
         render(createElement) {
           return createElement('div', { directives: [{ name: 'vue-element' }] }, [
             createElement(
-              VUE_COMPONENT_NAME,
+              componentRef.current,
               {
                 props: this.$data,
                 on: listenersRef.current,
@@ -87,8 +90,12 @@ export const VueWrapper = function VueWrapper<P>({
             ),
           ]);
         },
+        computed: {
+          Component() {
+            return componentRef.current;
+          },
+        },
         components: {
-          [VUE_COMPONENT_NAME]: component,
           'revue-internal-react-wrapper': ReactWrapper,
         },
         ...$rootVariables,
