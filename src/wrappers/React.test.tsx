@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import React from 'react';
-import { render } from '@testing-library/vue';
+import { fireEvent, render } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
 import { ReactWrapper } from './React';
 import { defineComponent } from '@vue/composition-api';
@@ -66,6 +66,20 @@ describe('Vue Wrapper', () => {
     });
 
     await findByText('Count is: 0');
+  });
+
+  it('Should not replace the entire element', async () => {
+    const { findByText, getByRole, debug } = render(VueCountComponentTester, {
+      props: {
+        component: ReactCountComponent,
+      },
+    });
+
+    const reactRoot = await findByText('Count is: 0');
+    await fireEvent.click(getByRole('button'));
+    const reactRootRerender = await findByText('Count is: 1');
+
+    expect(reactRootRerender).toBe(reactRoot);
   });
 
   it('should render the ReactComponent with props', async () => {
