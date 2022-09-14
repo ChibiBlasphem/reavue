@@ -1,3 +1,10 @@
+## [1.3.5](https://github.com/ChibiBlasphem/reavue/compare/v1.3.4...v1.3.5) (2022-09-14)
+
+
+### Performance Improvements
+
+* add data-testid on ReactWrapper root ([#11](https://github.com/ChibiBlasphem/reavue/issues/11)) ([54b84ca](https://github.com/ChibiBlasphem/reavue/commit/54b84caa0d8d672589aab6d1271c26be86f94471))
+
 ## [1.3.4](https://github.com/ChibiBlasphem/reavue/compare/v1.3.3...v1.3.4) (2022-09-03)
 
 
