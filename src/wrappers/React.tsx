@@ -31,7 +31,7 @@ const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1)
 export const ReactWrapper = defineComponent({
   props: ['component', 'passedProps'],
   render(createElement) {
-    return createElement('div', { ref: 'react' });
+    return createElement('div', { ref: 'react', attrs: { 'data-testid': 'reavue-react-wrapper' } });
   },
   data() {
     return {
