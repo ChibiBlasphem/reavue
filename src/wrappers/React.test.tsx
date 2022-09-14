@@ -59,17 +59,18 @@ const VueChildrenComponentTester = defineComponent({
 
 describe('Vue Wrapper', () => {
   it('should render the ReactComponent', async () => {
-    const { findByText } = render(ReactWrapper, {
+    const { findByText, findByTestId } = render(ReactWrapper, {
       props: {
         component: ReactCountComponent,
       },
     });
 
+    await findByTestId('reavue-react-wrapper');
     await findByText('Count is: 0');
   });
 
   it('Should not replace the entire element', async () => {
-    const { findByText, getByRole, debug } = render(VueCountComponentTester, {
+    const { findByText, getByRole } = render(VueCountComponentTester, {
       props: {
         component: ReactCountComponent,
       },
