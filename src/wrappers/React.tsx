@@ -28,10 +28,13 @@ const makeReactComponent = (Component: ComponentType<{ children?: ReactNode }>) 
 
 const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 
+export const REACT_WRAPPER_TESTID = 'reavue-react-wrapper';
+
 export const ReactWrapper = defineComponent({
+  inheritAttrs: false,
   props: ['component', 'passedProps'],
   render(createElement) {
-    return createElement('div', { ref: 'react', attrs: { 'data-testid': 'reavue-react-wrapper' } });
+    return createElement('div', { ref: 'react', attrs: { 'data-testid': REACT_WRAPPER_TESTID } });
   },
   data() {
     return {
