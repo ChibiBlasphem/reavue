@@ -1,3 +1,10 @@
+## [1.3.6](https://github.com/ChibiBlasphem/reavue/compare/v1.3.5...v1.3.6) (2022-09-15)
+
+
+### Bug Fixes
+
+* disable attrs fallthrough in ReactWrapper ([#12](https://github.com/ChibiBlasphem/reavue/issues/12)) ([e41b4f7](https://github.com/ChibiBlasphem/reavue/commit/e41b4f709633f024b222e7615c5d61b64dbf6ba7))
+
 ## [1.3.5](https://github.com/ChibiBlasphem/reavue/compare/v1.3.4...v1.3.5) (2022-09-14)
 
 
