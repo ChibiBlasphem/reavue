@@ -6,7 +6,7 @@ import { VueWrapper } from './Vue';
 
 const wrapVueChildren = (children: any) => {
   return defineComponent({
-    render: (createElement) => children,
+    render: () => children,
   });
 };
 
@@ -34,7 +34,10 @@ export const ReactWrapper = defineComponent({
   inheritAttrs: false,
   props: ['component', 'passedProps'],
   render(createElement) {
-    return createElement('div', { ref: 'react', attrs: { 'data-testid': REACT_WRAPPER_TESTID } });
+    return createElement('div', {
+      ref: 'react',
+      attrs: { 'data-testid': REACT_WRAPPER_TESTID, style: 'display: contents;' },
+    });
   },
   data() {
     return {

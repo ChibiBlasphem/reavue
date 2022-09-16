@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import React from 'react';
 import { fireEvent, render } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
-import { ReactWrapper } from './React';
+import { ReactWrapper, REACT_WRAPPER_TESTID } from './React';
 import { defineComponent } from '@vue/composition-api';
 
 const ReactCountComponent = ({ count = 0 }: { count?: number }) => {
@@ -59,13 +59,14 @@ const VueChildrenComponentTester = defineComponent({
 
 describe('Vue Wrapper', () => {
   it('should render the ReactComponent', async () => {
-    const { findByText, findByTestId } = render(ReactWrapper, {
+    const { findByText, getByTestId } = render(ReactWrapper, {
       props: {
         component: ReactCountComponent,
       },
     });
 
-    await findByTestId('reavue-react-wrapper');
+    const wrapper = getByTestId(REACT_WRAPPER_TESTID);
+    expect(getComputedStyle(wrapper).display).toBe('contents');
     await findByText('Count is: 0');
   });
 
