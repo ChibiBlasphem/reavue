@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { render, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { VueWrapper } from './Vue';
+import Vue from 'vue';
+import { render, act, fireEvent } from '@testing-library/react';
+import { VueWrapper, VUE_WRAPPER_TESTID } from './Vue';
 import { defineComponent } from '@vue/composition-api';
 import type { Component } from 'vue';
+
+Vue.config.devtools = false;
+Vue.config.productionTip = false;
 
 const VueCountComponent = defineComponent({
   props: {
@@ -14,7 +17,7 @@ const VueCountComponent = defineComponent({
   },
   render(h) {
     const count = (this.$props as { count: number }).count;
-    return h('div', ['Count is: ', count.toString()]);
+    return h('span', ['Count is: ', count.toString()]);
   },
 });
 
@@ -81,62 +84,66 @@ const ReactLifecycleComponentTester = ({
 };
 
 describe('Vue Wrapper', () => {
-  it('should render the ReactComponent', async () => {
-    const { findByText } = render(<VueWrapper count={0} component={VueCountComponent} />);
+  it('should render the ReactComponent', () => {
+    const { getByText, getByTestId } = render(
+      <VueWrapper count={0} component={VueCountComponent} />
+    );
 
-    await findByText('Count is: 0');
+    const wrapper = getByTestId(VUE_WRAPPER_TESTID);
+    expect(getComputedStyle(wrapper).display).toBe('contents');
+    getByText('Count is: 0');
   });
 
-  it('should render the ReactComponent with props', async () => {
-    const { findByText } = render(<VueWrapper component={VueCountComponent} count={1} />);
+  it('should render the ReactComponent with props', () => {
+    const { getByText } = render(<VueWrapper component={VueCountComponent} count={1} />);
 
-    await findByText('Count is: 1');
+    getByText('Count is: 1');
   });
 
-  it('should forward react event to emit', async () => {
+  it('should forward react event to emit', () => {
     const mockOnClick = jest.fn();
-    const { findByRole } = render(
+    const { getByRole } = render(
       <VueWrapper component={VueButtonComponent} on={{ click: mockOnClick }} />
     );
 
-    const button = await findByRole('button');
+    const button = getByRole('button');
 
-    await userEvent.click(button);
+    fireEvent.click(button);
     expect(mockOnClick).toHaveBeenCalled();
   });
 
-  it('should be possible to pass children', async () => {
-    const { findByRole } = render(
+  it('should be possible to pass children', () => {
+    const { getByRole } = render(
       <VueWrapper component={VueChildrenComponent}>
         <button>Child button</button>
       </VueWrapper>
     );
 
-    await findByRole('button');
+    getByRole('button');
   });
 
   it('should be possible to update props', async () => {
-    const { findByRole, findByText } = render(
+    const { getByRole, getByText } = render(
       <ReactCountComponentTester component={VueCountComponent} />
     );
 
-    await findByText('Count is: 0');
-    await act(async () => {
-      await userEvent.click(await findByRole('button'));
+    getByText('Count is: 0');
+    await act(() => {
+      fireEvent.click(getByRole('button'));
     });
-    await findByText('Count is: 1');
+    getByText('Count is: 1');
   });
 
   it('should be possible to update children', async () => {
-    const { findByText, findByRole } = render(
+    const { getByText, getByRole } = render(
       <ReactChildrenComponentTester component={VueChildrenComponent} />
     );
 
-    await findByText('Bonjour');
+    getByText('Bonjour');
     await act(async () => {
-      await userEvent.click(await findByRole('button'));
+      fireEvent.click(getByRole('button'));
     });
-    await findByText('Bonsoir');
+    getByText('Bonsoir');
   });
 
   it('should be able to take lifecycle methods', async () => {
@@ -152,13 +159,13 @@ describe('Vue Wrapper', () => {
       },
     };
 
-    const { findByRole, unmount } = render(
+    const { getByRole, unmount } = render(
       <ReactLifecycleComponentTester component={VueCountComponent} $options={$options} />
     );
     expect(beforeCreate).toHaveBeenCalled();
 
     await act(async () => {
-      await userEvent.click(await findByRole('button'));
+      fireEvent.click(getByRole('button'));
     });
     expect(updated).toHaveBeenCalled();
 

@@ -1,15 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { RefObject, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import Vue from 'vue';
 import type { Component, CreateElement, ComponentOptions } from 'vue';
-import { vueElement } from '../directives/vue-element';
 import { ReactWrapper } from './React';
 import { ExtractPropTypes } from '@vue/composition-api';
-
-const VUE_COMPONENT_NAME = 'revue-internal-component-name';
-
-Vue.config.devtools = false;
-Vue.config.productionTip = false;
 
 export type VueWrapperOptions = {
   lifecycles?: Pick<
@@ -36,15 +30,20 @@ export type VueWrapperProps<P extends Record<string, any>> = {
   $options?: VueWrapperOptions;
 } & ExtractPropTypes<P>;
 
-const wrapReactChildren = (createElement: CreateElement, childrenRef: any) => {
+const wrapReactChildren = (
+  createElement: CreateElement,
+  childrenRef: RefObject<ReactNode | undefined>
+) => {
   return createElement('revue-internal-react-wrapper', {
     props: {
-      component: () => <div>{childrenRef.current}</div>,
+      component: () => childrenRef.current ?? null,
     },
   });
 };
 
-export const VueWrapper = function VueWrapper<P>({
+export const VUE_WRAPPER_TESTID = 'reavue-vue-wrapper';
+
+export const VueWrapper = function VueWrapper<P extends Record<string, any>>({
   component,
   on,
   children,
@@ -75,20 +74,18 @@ export const VueWrapper = function VueWrapper<P>({
 
     if (el) {
       const instance = (vueInstance.current = new Vue({
-        el,
+        el: el.firstElementChild!,
         data: props,
-        directives: { 'vue-element': vueElement },
+        // directives: { 'vue-element': vueElement },
         render(createElement) {
-          return createElement('div', { directives: [{ name: 'vue-element' }] }, [
-            createElement(
-              componentRef.current,
-              {
-                props: this.$data,
-                on: listenersRef.current,
-              },
-              [wrapReactChildren(createElement, childrenRef)]
-            ),
-          ]);
+          return createElement(
+            componentRef.current,
+            {
+              props: this.$data,
+              on: listenersRef.current,
+            },
+            [wrapReactChildren(createElement, childrenRef)]
+          );
         },
         computed: {
           Component() {
@@ -109,5 +106,11 @@ export const VueWrapper = function VueWrapper<P>({
     }
   }, []);
 
-  return <div ref={rootEl} />;
+  // Using a double div to mount vue on child div,
+  // so it does override our react root element and to no throw when unmounting.
+  return (
+    <div ref={rootEl} style={{ display: 'contents' }} data-testid={VUE_WRAPPER_TESTID}>
+      <div></div>
+    </div>
+  );
 };

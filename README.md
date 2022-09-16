@@ -58,7 +58,7 @@ export default defineComponent({
 ### With the wrapper component
 ```vue
 <template>
-  <ReactWrapper :component="MyReactComponent" message="Hello world" />
+  <ReactWrapper :component="MyReactComponent" :passedProps="componentProps" />
 </template>
 
 <script lang="ts">
@@ -69,10 +69,17 @@ export default defineComponent({
     components: {
         ReactWrapper,
     },
+    data() {
+      return {
+        componentProps: {
+          message: "Hello world"
+        }
+      };
+    },
     computed: {
         MyReactComponent() {
             return MyReactComponent;
-        }
+        },
     }
 })
 </script>
