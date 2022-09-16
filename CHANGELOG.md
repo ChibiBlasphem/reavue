@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/ChibiBlasphem/reavue/compare/v1.3.6...v1.4.0) (2022-09-16)
+
+
+### Features
+
+* rework internal of reavue ([#13](https://github.com/ChibiBlasphem/reavue/issues/13)) ([7f588e5](https://github.com/ChibiBlasphem/reavue/commit/7f588e57676a2d6b446986fa771b11e5465add6d))
+
 ## [1.3.6](https://github.com/ChibiBlasphem/reavue/compare/v1.3.5...v1.3.6) (2022-09-15)
 
 
