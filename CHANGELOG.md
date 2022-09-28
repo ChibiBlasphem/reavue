@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/ChibiBlasphem/reavue/compare/v1.4.0...v1.4.1) (2022-09-28)
+
+
+### Bug Fixes
+
+* **wrappers/React:** add watcher on `$attrs` ([#15](https://github.com/ChibiBlasphem/reavue/issues/15)) ([462affd](https://github.com/ChibiBlasphem/reavue/commit/462affd1e982783b645c3b1f9d0a10b3d65f61fc))
+
 # [1.4.0](https://github.com/ChibiBlasphem/reavue/compare/v1.3.6...v1.4.0) (2022-09-16)
 
 
