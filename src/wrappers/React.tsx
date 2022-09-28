@@ -81,6 +81,12 @@ export const ReactWrapper = defineComponent({
       },
       deep: true,
     },
+    $attrs: {
+      handler() {
+        this.mountReactComponent(this.reactRoot);
+      },
+      deep: true,
+    },
     $listeners: {
       handler() {
         this.mountReactComponent(this.reactRoot);
